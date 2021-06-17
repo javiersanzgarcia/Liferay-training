@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.3.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_3_0.dtd">
+
+<service-builder dependency-injector="ds" package-path="com.jsanz.library">
+	<namespace>JAVI</namespace>
+
+	<entity local-service="true" name="Library" remote-service="true" uuid="true">
+		<column name="ISBN" primary="true" type="long"/>
+
+		<!-- Other fields -->
+		<column name="title" type="String"/>
+		<column name="writer" type="String"/>
+		<column name="publication" type="Date"/>
+
+		<finder name="Title" return-type="Collection">
+			<finder-column name="title"/>
+		</finder>
+
+		<finder name="Writer" return-type="Collection">
+			<finder-column name="writer"/>
+		</finder>
+
+	</entity>
+</service-builder>

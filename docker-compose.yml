@@ -1,0 +1,56 @@
+version: '3.7'
+
+services:
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: root_pwd
+    ports:
+      - "3306:3306"
+      - "33060:33060"
+    volumes:
+      - ./configs/common/mysql/conf.d:/etc/mysql/conf.d
+      - ./configs/common/mysql/initdb.d:/docker-entrypoint-initdb.d
+      - db-data:/var/lib/mysql
+
+  elasticsearch:
+    image: elasticsearch:6.5.0
+    environment:
+      - discovery.type=single-node
+      - cluster.name=LiferayElasticsearchCluster
+      - xpack.security.enabled=false
+      - network.bind_host=0.0.0.0
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
+
+  liferay:
+    image: ibaiborodine/liferay-portal-ce
+    environment:
+      LIFERAY_SETUP_PERIOD_WIZARD_PERIOD_ENABLED: "false"
+      LIFERAY_TERMS_PERIOD_OF_PERIOD_USE_PERIOD_REQUIRED: "false"
+      LIFERAY_USERS_PERIOD_REMINDER_PERIOD_QUERIES_PERIOD_ENABLED: "false"
+      LIFERAY_USERS_PERIOD_REMINDER_PERIOD_QUERIES_PERIOD_CUSTOM_PERIOD_QUESTION_PERIOD_ENABLED: "false"
+    mem_limit: 4GB
+    depends_on:
+      - mysql
+      - elasticsearch
+    ports:
+      - "80:8080"
+      - "11311:11311"
+    volumes:
+      - ./configs/common/liferay/base:/etc/opt/liferay
+      - lr-data:/opt/liferay/data/document_library
+      - ./configs/docker/osgi/modules:/opt/liferay/deploy
+
+volumes:
+  db-data:
+  es-data:
+  lr-data:

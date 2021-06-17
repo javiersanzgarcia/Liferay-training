@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="com.jsanz.library.model.Library">
+		<field name="uuid" type="String" />
+		<field name="ISBN" type="long" />
+		<field name="title" type="String" />
+		<field name="writer" type="String" />
+		<field name="publication" type="Date" />
+	</model>
+</model-hints>

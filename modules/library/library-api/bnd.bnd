@@ -1,0 +1,10 @@
+Bundle-Name: library-api
+Bundle-SymbolicName: com.jsanz.library.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.jsanz.library.exception,\
+	com.jsanz.library.model,\
+	com.jsanz.library.service,\
+	com.jsanz.library.service.persistence
+-check: EXPORTS
+-includeresource: META-INF/service.xml=../library-service/service.xml

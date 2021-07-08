@@ -47,7 +47,16 @@ const App = () => {
     setModal(true);
   }
 
+  const getRoles = () => {
+
+    let id = Number.parseInt(Liferay.ThemeDisplay.getUserId());
+    axios.get(baseUrl + "getRoles",{params: {id: id}}).then(response => {
+      permisions = response.data;
+    });
+  }
+
   useEffect(() => {
+    getRoles();
     retrieveBooks();
   }, []);
 
@@ -152,7 +161,7 @@ const App = () => {
             <td>{book.writer}</td>
             <td>{new Date(book.publication).toLocaleDateString()}</td>
             <td>
-              {permisions.indexOf("edit-book") != -1 && <Button active={} color="secundary" onClick={(event) => openEdit(book)}>
+              {permisions.indexOf("edit-book") != -1 && <Button  color="secundary" onClick={(event) => openEdit(book)}>
                 Edit
               </Button>}
               {permisions.indexOf("delete-book") != -1 && <Button color="danger" onClick={(event) => deleteBook(book)}>

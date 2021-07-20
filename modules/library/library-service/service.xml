@@ -11,13 +11,18 @@
 		<column name="title" type="String"/>
 		<column name="writer" type="String"/>
 		<column name="publication" type="Date"/>
-
+		
+		
 		<finder name="Title" return-type="Collection">
-			<finder-column name="title"/>
+			<finder-column name="title" comparator="LIKE"/>
 		</finder>
 
 		<finder name="Writer" return-type="Collection">
-			<finder-column name="writer"/>
+			<finder-column name="writer" comparator="LIKE"/>
+		</finder>
+
+		<finder name="Publication" return-type="Collection">
+			<finder-column name="publication"/>
 		</finder>
 
 	</entity>

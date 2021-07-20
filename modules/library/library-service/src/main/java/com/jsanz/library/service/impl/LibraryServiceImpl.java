@@ -56,4 +56,28 @@ public class LibraryServiceImpl extends LibraryServiceBaseImpl {
         }
         return libraryStored;
     }
+
+    public Library delete(Library library) {
+        System.out.println("Deleting from the database");
+        Library library1 = null;
+        try {
+            library1 = LibraryLocalServiceUtil.deleteLibrary(library);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return library1;
+    }
+
+    public Library update(Library library){
+        Library library1 = null;
+        try {
+            LibraryLocalServiceUtil.deleteLibrary(library.getISBN());
+            library1 = LibraryLocalServiceUtil.addLibrary(library);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return library1;
+    }
+
+    
 }

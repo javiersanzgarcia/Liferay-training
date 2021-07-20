@@ -13,7 +13,8 @@ group = "com.jsanz.library"
 tasks.withType(JavaCompile) {
 
 	// Generated classes using Jodd library are unable to be read when compiled against JDK 11
-
+	sourceCompatibility = 1.8
+	targetCompatibility = 1.8
 	sourceCompatibility = JavaVersion.VERSION_1_8
 	targetCompatibility = JavaVersion.VERSION_1_8
 }

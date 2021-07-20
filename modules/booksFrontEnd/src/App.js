@@ -18,9 +18,10 @@ const App = () => {
 
 
   const baseUrl = "http://localhost/o/library/";
-  let permisions = [];
+  
 
   const [books, setBooks] = useState([]);
+  const [roles, setRoles] = useState([]);
   const [modal, setModal] = useState(false);
 
   const [isbn, setIsbn] = useState(0);
@@ -28,12 +29,13 @@ const App = () => {
   const [writer, setWriter] = useState("");
   const [date, setDate] = useState("");
   const [editMode,setEditMode]  = useState(false);
+  const [search,setSearch] = useState("");
 
   const toggle = () => {
     setEditMode(false)
     setIsbn(0);
     setTitle("");
-    setWriter("");
+    setWriter("" );
     setDate("");
     setModal(!modal);
   }
@@ -47,15 +49,29 @@ const App = () => {
     setModal(true);
   }
 
+  const getRoles = () => {
+
+    let id = Liferay.ThemeDisplay.getUserId();
+    axios.get(baseUrl + "getRoles/" + id).then(response => {
+      setRoles(response.data);
+      console.log(response.data);
+    });
+  }
+
   useEffect(() => {
+    getRoles();
     retrieveBooks();
   }, []);
 
 
   const findBooks = (search) => {
-    axios.get(baseUrl + "find",{params: {query: search}}).then((response) => {
-      setBooks(response.data);
-    });
+    if (search == "") retrieveBooks();
+    else {
+      axios.get(baseUrl + "find",{params: {query: search}}).then((response) => {
+        setBooks(response.data);
+      });
+    }
+      
 
   }
 
@@ -95,9 +111,7 @@ const App = () => {
       writer,
       publication: date,
     };
-    axios.put(baseUrl + "update",{
-      newBook
-    }).then(response => {
+    axios.post(baseUrl + "update",newBook).then(response => {
       if (response.status === 200) {
         retrieveBooks();
       }
@@ -132,7 +146,6 @@ const App = () => {
             <td>{book.writer}</td>
             <td>{new Date(book.publication).toLocaleDateString()}</td>
             <td>
-              
             </td>
           </tr>
         ))}
@@ -152,10 +165,10 @@ const App = () => {
             <td>{book.writer}</td>
             <td>{new Date(book.publication).toLocaleDateString()}</td>
             <td>
-              {permisions.indexOf("edit-book") != -1 && <Button active={} color="secundary" onClick={(event) => openEdit(book)}>
+              {roles.indexOf("edit-book") != -1 && <Button  color="secundary" onClick={(event) => openEdit(book)}>
                 Edit
               </Button>}
-              {permisions.indexOf("delete-book") != -1 && <Button color="danger" onClick={(event) => deleteBook(book)}>
+              {roles.indexOf("delete-books") != -1 && <Button color="danger" onClick={(event) => deleteBook(book)}>
                 Delete
               </Button>}
             </td>
@@ -173,8 +186,11 @@ const App = () => {
           placeholder="Search"
           type="search"
           name="writer"
-          onChange={(event) => findBooks(event.target.value)}
+          onChange={(event) => setSearch(event.target.value)}
             />
+         <Button  onClick={() => findBooks(search)}>
+          Search
+        </Button>
 
       </form>
       <h4>Book List</h4>

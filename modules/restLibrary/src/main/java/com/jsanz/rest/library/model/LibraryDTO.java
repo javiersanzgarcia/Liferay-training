@@ -22,9 +22,9 @@ public class LibraryDTO {
         title = library.getTitle();
         writer = library.getWriter();
         if (library.getPublication() == null) {
-            publication = library.getPublication();
-        } else {
             publication = new Date();
+        } else {
+            publication = library.getPublication();
         }
     }
 

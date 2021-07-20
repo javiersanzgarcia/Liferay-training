@@ -24,7 +24,10 @@ import com.liferay.portal.aop.AopService;
 
 import org.osgi.service.component.annotations.Component;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * The implementation of the library local service.
@@ -47,6 +50,17 @@ public class LibraryLocalServiceImpl extends LibraryLocalServiceBaseImpl {
 
 	public List<Library> getAll() {
 		return LibraryUtil.findAll();
+	}
+
+	public List<Library> findByAll(String search){
+		search = "%" + search + "%";
+		List<Library> result = new ArrayList<>();
+		result.addAll(LibraryUtil.findByTitle(search));
+		result.addAll(LibraryUtil.findByWriter(search));
+		result.addAll(LibraryUtil.findByUuid(search));
+		//result.addAll(LibraryUtil.findByPublication(publication));
+		result = result.stream().distinct().collect(Collectors.toList());
+		return result;
 	}
 
 	public List<Library> findByTitle(String title) {

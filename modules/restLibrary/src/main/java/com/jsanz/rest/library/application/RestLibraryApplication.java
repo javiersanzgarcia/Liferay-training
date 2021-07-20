@@ -103,10 +103,13 @@ public class RestLibraryApplication extends Application {
     public List<LibraryDTO> search(@PathParam("query") String query)
     {
     	DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(LibraryDTO.class, "lib", PortletClassLoaderUtil.getClassLoader());
-    	dynamicQuery.add(RestrictionsFactoryUtil.eq("ISBN", query))
-    		.add(RestrictionsFactoryUtil.eq("title", query))
-    		.add(RestrictionsFactoryUtil.eq("writer", query));
     	
+    	dynamicQuery.add(RestrictionsFactoryUtil.or(
+    			RestrictionsFactoryUtil.eq("lib.ISBN", query), 
+    			RestrictionsFactoryUtil.or(
+    					RestrictionsFactoryUtil.eq("lib.title", query), 
+    					RestrictionsFactoryUtil.eq("lib.writer", query))));
+    	    	
     	List<LibraryDTO> foundBooks = LibraryLocalServiceUtil.dynamicQuery(dynamicQuery);
     	return foundBooks;
     }

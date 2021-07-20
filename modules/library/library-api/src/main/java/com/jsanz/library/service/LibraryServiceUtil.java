@@ -47,10 +47,22 @@ public class LibraryServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
+	public static com.jsanz.library.model.Library remove(
+		com.jsanz.library.model.Library library) {
+
+		return getService().remove(library);
+	}
+
 	public static com.jsanz.library.model.Library save(
 		com.jsanz.library.model.Library library) {
 
 		return getService().save(library);
+	}
+
+	public static com.jsanz.library.model.Library update(
+		com.jsanz.library.model.Library library) {
+
+		return getService().update(library);
 	}
 
 	public static LibraryService getService() {

@@ -612,6 +612,149 @@ public class LibraryUtil {
 	}
 
 	/**
+	 * Returns all the libraries where ISBN = &#63;.
+	 *
+	 * @param ISBN the isbn
+	 * @return the matching libraries
+	 */
+	public static List<Library> findByISBN(long ISBN) {
+		return getPersistence().findByISBN(ISBN);
+	}
+
+	/**
+	 * Returns a range of all the libraries where ISBN = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LibraryModelImpl</code>.
+	 * </p>
+	 *
+	 * @param ISBN the isbn
+	 * @param start the lower bound of the range of libraries
+	 * @param end the upper bound of the range of libraries (not inclusive)
+	 * @return the range of matching libraries
+	 */
+	public static List<Library> findByISBN(long ISBN, int start, int end) {
+		return getPersistence().findByISBN(ISBN, start, end);
+	}
+
+	/**
+	 * Returns an ordered range of all the libraries where ISBN = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LibraryModelImpl</code>.
+	 * </p>
+	 *
+	 * @param ISBN the isbn
+	 * @param start the lower bound of the range of libraries
+	 * @param end the upper bound of the range of libraries (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching libraries
+	 */
+	public static List<Library> findByISBN(
+		long ISBN, int start, int end,
+		OrderByComparator<Library> orderByComparator) {
+
+		return getPersistence().findByISBN(ISBN, start, end, orderByComparator);
+	}
+
+	/**
+	 * Returns an ordered range of all the libraries where ISBN = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LibraryModelImpl</code>.
+	 * </p>
+	 *
+	 * @param ISBN the isbn
+	 * @param start the lower bound of the range of libraries
+	 * @param end the upper bound of the range of libraries (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching libraries
+	 */
+	public static List<Library> findByISBN(
+		long ISBN, int start, int end,
+		OrderByComparator<Library> orderByComparator, boolean useFinderCache) {
+
+		return getPersistence().findByISBN(
+			ISBN, start, end, orderByComparator, useFinderCache);
+	}
+
+	/**
+	 * Returns the first library in the ordered set where ISBN = &#63;.
+	 *
+	 * @param ISBN the isbn
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching library
+	 * @throws NoSuchLibraryException if a matching library could not be found
+	 */
+	public static Library findByISBN_First(
+			long ISBN, OrderByComparator<Library> orderByComparator)
+		throws com.jsanz.library.exception.NoSuchLibraryException {
+
+		return getPersistence().findByISBN_First(ISBN, orderByComparator);
+	}
+
+	/**
+	 * Returns the first library in the ordered set where ISBN = &#63;.
+	 *
+	 * @param ISBN the isbn
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching library, or <code>null</code> if a matching library could not be found
+	 */
+	public static Library fetchByISBN_First(
+		long ISBN, OrderByComparator<Library> orderByComparator) {
+
+		return getPersistence().fetchByISBN_First(ISBN, orderByComparator);
+	}
+
+	/**
+	 * Returns the last library in the ordered set where ISBN = &#63;.
+	 *
+	 * @param ISBN the isbn
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching library
+	 * @throws NoSuchLibraryException if a matching library could not be found
+	 */
+	public static Library findByISBN_Last(
+			long ISBN, OrderByComparator<Library> orderByComparator)
+		throws com.jsanz.library.exception.NoSuchLibraryException {
+
+		return getPersistence().findByISBN_Last(ISBN, orderByComparator);
+	}
+
+	/**
+	 * Returns the last library in the ordered set where ISBN = &#63;.
+	 *
+	 * @param ISBN the isbn
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching library, or <code>null</code> if a matching library could not be found
+	 */
+	public static Library fetchByISBN_Last(
+		long ISBN, OrderByComparator<Library> orderByComparator) {
+
+		return getPersistence().fetchByISBN_Last(ISBN, orderByComparator);
+	}
+
+	/**
+	 * Removes all the libraries where ISBN = &#63; from the database.
+	 *
+	 * @param ISBN the isbn
+	 */
+	public static void removeByISBN(long ISBN) {
+		getPersistence().removeByISBN(ISBN);
+	}
+
+	/**
+	 * Returns the number of libraries where ISBN = &#63;.
+	 *
+	 * @param ISBN the isbn
+	 * @return the number of matching libraries
+	 */
+	public static int countByISBN(long ISBN) {
+		return getPersistence().countByISBN(ISBN);
+	}
+
+	/**
 	 * Caches the library in the entity cache if it is enabled.
 	 *
 	 * @param library the library

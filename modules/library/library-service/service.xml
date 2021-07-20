@@ -20,5 +20,9 @@
 			<finder-column name="writer"/>
 		</finder>
 
+		<finder name="ISBN" return-type="Collection">
+			<finder-column name="ISBN"/>
+		</finder>
+
 	</entity>
 </service-builder>

@@ -1673,6 +1673,341 @@ public class LibraryPersistenceImpl
 	private static final String _FINDER_COLUMN_WRITER_WRITER_3 =
 		"(library.writer IS NULL OR library.writer = '')";
 
+	private FinderPath _finderPathWithPaginationFindByISBN;
+	private FinderPath _finderPathWithoutPaginationFindByISBN;
+	private FinderPath _finderPathCountByISBN;
+
+	/**
+	 * Returns all the libraries where ISBN = &#63;.
+	 *
+	 * @param ISBN the isbn
+	 * @return the matching libraries
+	 */
+	@Override
+	public List<Library> findByISBN(long ISBN) {
+		return findByISBN(ISBN, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the libraries where ISBN = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LibraryModelImpl</code>.
+	 * </p>
+	 *
+	 * @param ISBN the isbn
+	 * @param start the lower bound of the range of libraries
+	 * @param end the upper bound of the range of libraries (not inclusive)
+	 * @return the range of matching libraries
+	 */
+	@Override
+	public List<Library> findByISBN(long ISBN, int start, int end) {
+		return findByISBN(ISBN, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the libraries where ISBN = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LibraryModelImpl</code>.
+	 * </p>
+	 *
+	 * @param ISBN the isbn
+	 * @param start the lower bound of the range of libraries
+	 * @param end the upper bound of the range of libraries (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching libraries
+	 */
+	@Override
+	public List<Library> findByISBN(
+		long ISBN, int start, int end,
+		OrderByComparator<Library> orderByComparator) {
+
+		return findByISBN(ISBN, start, end, orderByComparator, true);
+	}
+
+	/**
+	 * Returns an ordered range of all the libraries where ISBN = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LibraryModelImpl</code>.
+	 * </p>
+	 *
+	 * @param ISBN the isbn
+	 * @param start the lower bound of the range of libraries
+	 * @param end the upper bound of the range of libraries (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching libraries
+	 */
+	@Override
+	public List<Library> findByISBN(
+		long ISBN, int start, int end,
+		OrderByComparator<Library> orderByComparator, boolean useFinderCache) {
+
+		FinderPath finderPath = null;
+		Object[] finderArgs = null;
+
+		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
+			(orderByComparator == null)) {
+
+			if (useFinderCache) {
+				finderPath = _finderPathWithoutPaginationFindByISBN;
+				finderArgs = new Object[] {ISBN};
+			}
+		}
+		else if (useFinderCache) {
+			finderPath = _finderPathWithPaginationFindByISBN;
+			finderArgs = new Object[] {ISBN, start, end, orderByComparator};
+		}
+
+		List<Library> list = null;
+
+		if (useFinderCache) {
+			list = (List<Library>)finderCache.getResult(
+				finderPath, finderArgs, this);
+
+			if ((list != null) && !list.isEmpty()) {
+				for (Library library : list) {
+					if (ISBN != library.getISBN()) {
+						list = null;
+
+						break;
+					}
+				}
+			}
+		}
+
+		if (list == null) {
+			StringBundler sb = null;
+
+			if (orderByComparator != null) {
+				sb = new StringBundler(
+					3 + (orderByComparator.getOrderByFields().length * 2));
+			}
+			else {
+				sb = new StringBundler(3);
+			}
+
+			sb.append(_SQL_SELECT_LIBRARY_WHERE);
+
+			sb.append(_FINDER_COLUMN_ISBN_ISBN_2);
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(
+					sb, _ORDER_BY_ENTITY_ALIAS, orderByComparator);
+			}
+			else {
+				sb.append(LibraryModelImpl.ORDER_BY_JPQL);
+			}
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				queryPos.add(ISBN);
+
+				list = (List<Library>)QueryUtil.list(
+					query, getDialect(), start, end);
+
+				cacheResult(list);
+
+				if (useFinderCache) {
+					finderCache.putResult(finderPath, finderArgs, list);
+				}
+			}
+			catch (Exception exception) {
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns the first library in the ordered set where ISBN = &#63;.
+	 *
+	 * @param ISBN the isbn
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching library
+	 * @throws NoSuchLibraryException if a matching library could not be found
+	 */
+	@Override
+	public Library findByISBN_First(
+			long ISBN, OrderByComparator<Library> orderByComparator)
+		throws NoSuchLibraryException {
+
+		Library library = fetchByISBN_First(ISBN, orderByComparator);
+
+		if (library != null) {
+			return library;
+		}
+
+		StringBundler sb = new StringBundler(4);
+
+		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		sb.append("ISBN=");
+		sb.append(ISBN);
+
+		sb.append("}");
+
+		throw new NoSuchLibraryException(sb.toString());
+	}
+
+	/**
+	 * Returns the first library in the ordered set where ISBN = &#63;.
+	 *
+	 * @param ISBN the isbn
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching library, or <code>null</code> if a matching library could not be found
+	 */
+	@Override
+	public Library fetchByISBN_First(
+		long ISBN, OrderByComparator<Library> orderByComparator) {
+
+		List<Library> list = findByISBN(ISBN, 0, 1, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the last library in the ordered set where ISBN = &#63;.
+	 *
+	 * @param ISBN the isbn
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching library
+	 * @throws NoSuchLibraryException if a matching library could not be found
+	 */
+	@Override
+	public Library findByISBN_Last(
+			long ISBN, OrderByComparator<Library> orderByComparator)
+		throws NoSuchLibraryException {
+
+		Library library = fetchByISBN_Last(ISBN, orderByComparator);
+
+		if (library != null) {
+			return library;
+		}
+
+		StringBundler sb = new StringBundler(4);
+
+		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		sb.append("ISBN=");
+		sb.append(ISBN);
+
+		sb.append("}");
+
+		throw new NoSuchLibraryException(sb.toString());
+	}
+
+	/**
+	 * Returns the last library in the ordered set where ISBN = &#63;.
+	 *
+	 * @param ISBN the isbn
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching library, or <code>null</code> if a matching library could not be found
+	 */
+	@Override
+	public Library fetchByISBN_Last(
+		long ISBN, OrderByComparator<Library> orderByComparator) {
+
+		int count = countByISBN(ISBN);
+
+		if (count == 0) {
+			return null;
+		}
+
+		List<Library> list = findByISBN(
+			ISBN, count - 1, count, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Removes all the libraries where ISBN = &#63; from the database.
+	 *
+	 * @param ISBN the isbn
+	 */
+	@Override
+	public void removeByISBN(long ISBN) {
+		for (Library library :
+				findByISBN(ISBN, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null)) {
+
+			remove(library);
+		}
+	}
+
+	/**
+	 * Returns the number of libraries where ISBN = &#63;.
+	 *
+	 * @param ISBN the isbn
+	 * @return the number of matching libraries
+	 */
+	@Override
+	public int countByISBN(long ISBN) {
+		FinderPath finderPath = _finderPathCountByISBN;
+
+		Object[] finderArgs = new Object[] {ISBN};
+
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+
+		if (count == null) {
+			StringBundler sb = new StringBundler(2);
+
+			sb.append(_SQL_COUNT_LIBRARY_WHERE);
+
+			sb.append(_FINDER_COLUMN_ISBN_ISBN_2);
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				queryPos.add(ISBN);
+
+				count = (Long)query.uniqueResult();
+
+				finderCache.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception exception) {
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	private static final String _FINDER_COLUMN_ISBN_ISBN_2 = "library.ISBN = ?";
+
 	public LibraryPersistenceImpl() {
 		Map<String, String> dbColumnNames = new HashMap<String, String>();
 
@@ -1944,6 +2279,12 @@ public class LibraryPersistenceImpl
 			finderCache.removeResult(
 				_finderPathWithoutPaginationFindByWriter, args);
 
+			args = new Object[] {libraryModelImpl.getISBN()};
+
+			finderCache.removeResult(_finderPathCountByISBN, args);
+			finderCache.removeResult(
+				_finderPathWithoutPaginationFindByISBN, args);
+
 			finderCache.removeResult(_finderPathCountAll, FINDER_ARGS_EMPTY);
 			finderCache.removeResult(
 				_finderPathWithoutPaginationFindAll, FINDER_ARGS_EMPTY);
@@ -2004,6 +2345,25 @@ public class LibraryPersistenceImpl
 				finderCache.removeResult(_finderPathCountByWriter, args);
 				finderCache.removeResult(
 					_finderPathWithoutPaginationFindByWriter, args);
+			}
+
+			if ((libraryModelImpl.getColumnBitmask() &
+				 _finderPathWithoutPaginationFindByISBN.getColumnBitmask()) !=
+					 0) {
+
+				Object[] args = new Object[] {
+					libraryModelImpl.getOriginalISBN()
+				};
+
+				finderCache.removeResult(_finderPathCountByISBN, args);
+				finderCache.removeResult(
+					_finderPathWithoutPaginationFindByISBN, args);
+
+				args = new Object[] {libraryModelImpl.getISBN()};
+
+				finderCache.removeResult(_finderPathCountByISBN, args);
+				finderCache.removeResult(
+					_finderPathWithoutPaginationFindByISBN, args);
 			}
 		}
 
@@ -2334,6 +2694,23 @@ public class LibraryPersistenceImpl
 		_finderPathCountByWriter = new FinderPath(
 			Long.class, FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
 			"countByWriter", new String[] {String.class.getName()});
+
+		_finderPathWithPaginationFindByISBN = new FinderPath(
+			LibraryImpl.class, FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
+			"findByISBN",
+			new String[] {
+				Long.class.getName(), Integer.class.getName(),
+				Integer.class.getName(), OrderByComparator.class.getName()
+			});
+
+		_finderPathWithoutPaginationFindByISBN = new FinderPath(
+			LibraryImpl.class, FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+			"findByISBN", new String[] {Long.class.getName()},
+			LibraryModelImpl.ISBN_COLUMN_BITMASK);
+
+		_finderPathCountByISBN = new FinderPath(
+			Long.class, FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+			"countByISBN", new String[] {Long.class.getName()});
 	}
 
 	@Deactivate

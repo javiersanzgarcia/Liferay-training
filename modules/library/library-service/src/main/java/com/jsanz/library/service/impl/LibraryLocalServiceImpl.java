@@ -52,5 +52,12 @@ public class LibraryLocalServiceImpl extends LibraryLocalServiceBaseImpl {
 	public List<Library> findByTitle(String title) {
 		return LibraryUtil.findByTitle(title);
 	}
+	
+	public List<Library> findByISBN(long ISBN) {
+		return LibraryUtil.findByISBN(ISBN);
+	}
 
+	public List<Library> findByWriter(String writer) {
+		return LibraryUtil.findByWriter(writer);
+	}
 }

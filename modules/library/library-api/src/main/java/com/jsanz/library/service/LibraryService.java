@@ -57,6 +57,10 @@ public interface LibraryService extends BaseService {
 	 */
 	public String getOSGiServiceIdentifier();
 
+	public Library remove(Library library);
+
 	public Library save(Library library);
+
+	public Library update(Library library);
 
 }

@@ -2,19 +2,32 @@ package com.jsanz.rest.library.application;
 
 import com.jsanz.library.model.Library;
 import com.jsanz.library.service.LibraryLocalService;
+import com.jsanz.library.service.LibraryLocalServiceUtil;
 import com.jsanz.library.service.LibraryService;
 import com.jsanz.rest.library.model.LibraryDTO;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
+import com.liferay.portal.kernel.model.Role;
+import com.liferay.portal.kernel.portlet.PortletClassLoaderUtil;
+import com.liferay.portal.kernel.security.permission.PermissionChecker;
+import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
+
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.jaxrs.whiteboard.JaxrsWhiteboardConstants;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Application;
+import javax.ws.rs.core.Request;
+
 import java.util.*;
 
 /**
@@ -33,7 +46,7 @@ public class RestLibraryApplication extends Application {
     public Set<Object> getSingletons() {
         return Collections.singleton(this);
     }
-
+    
     @Reference
     LibraryLocalService libraryLocalService;
 
@@ -65,6 +78,55 @@ public class RestLibraryApplication extends Application {
 
     }
 
+    @DELETE
+    @Produces("application/json")
+    public LibraryDTO remove(LibraryDTO request) {
+        Library library = generateSBObject(request);
+        Library deleteBook = libraryService.remove(library);
+        return new LibraryDTO(deleteBook);
+
+    }
+    
+    @PUT
+    @Path("/update")
+    @Produces("application/json")
+    public LibraryDTO update(LibraryDTO request) {
+    	Library library = generateSBObject(request);
+    	Library updateBook = libraryService.update(library);
+    	return new LibraryDTO(updateBook);
+    }
+    
+    
+    @GET
+    @Path("/search?query={query}")
+    @Produces("application/json")
+    public List<LibraryDTO> search(@PathParam("query") String query)
+    {
+    	DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(LibraryDTO.class, "lib", PortletClassLoaderUtil.getClassLoader());
+    	dynamicQuery.add(RestrictionsFactoryUtil.eq("ISBN", query))
+    		.add(RestrictionsFactoryUtil.eq("title", query))
+    		.add(RestrictionsFactoryUtil.eq("writer", query));
+    	
+    	List<LibraryDTO> foundBooks = LibraryLocalServiceUtil.dynamicQuery(dynamicQuery);
+    	return foundBooks;
+    }
+    
+    //wip
+    @GET
+    @Path("/getPermissions?userId={userId}")
+    @Produces("application/json")
+    public List<String> getPermissions(@PathParam("userId") long userId)
+    {
+    	List<Role> userRoles = RoleLocalServiceUtil.getUserRoles(userId);
+    	List<String> roleNames = new ArrayList<>();
+    	for (Role role : userRoles)
+    	{
+    		roleNames.add(role.getName());
+    	}
+    	return roleNames;
+    }
+    
+    
     private Library generateSBObject(LibraryDTO book) {
         Library bookToReturn = libraryLocalService.createLibrary(book.getISBN());
         bookToReturn.setTitle(book.getTitle() != null ? book.getTitle() : "");

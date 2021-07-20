@@ -23,11 +23,26 @@ const App = () => {
   const [isbn, setIsbn] = useState(0);
   const [title, setTitle] = useState("");
   const [writer, setWriter] = useState("");
+  const [date, setDate] = useState("");
 
-  const toggle = () => setModal(!modal);
+  const [edit, setEdit] = useState(false);
+  const toggle = () => {
+    setEdit(false);
+    setIsbn(0);
+    setTitle("");
+    setWriter("");
+    setDate("");
+    setModal(!modal);
+  }
+  
+  const REMOVE_BOOK = "removeBook";
+  const UPDATE_BOOK = "updateBook";
+
+  let permissions = [];
 
   useEffect(() => {
     retrieveBooks();
+    getPermissions();
   }, []);
 
   const retrieveBooks = () => {
@@ -56,8 +71,99 @@ const App = () => {
     toggle();
   };
 
+  const removeBook = (book) => {
+    axios.delete(baseUrl, book).then((response) => {
+      if (response.status == 200) {
+        retrieveBooks();
+      }
+    });
+  };
+
+  const updateBook = () => {
+    const book = {
+      isbn: parseInt(isbn),
+      title,
+      writer,
+      publication: date,
+    };
+    
+    axios.put(baseUrl + "update", {book}).then(response => {
+      if (response.status == 200) {
+        retrieveBooks();
+      }
+    });
+  }
+
+  const updateForm = (book) => {
+    setEdit(true);
+    setIsbn(book.isbn);
+    setTitle(book.title);
+    setWriter(book.writer);
+    setDate(new Date(book.publication).toISOString().substr(0, 10));
+    setModal(true);
+  }
+
+  const adminView = (books) => {
+    return (
+      <tbody>
+        {books && books.map((book) => (
+          <tr key={book.isbn}>
+            <td>{book.isbn}</td>
+            <td>{book.title}</td>
+            <td>{book.writer}</td>
+            <td>{new Date(book.publication).toLocaleDateString}</td>
+            <td>
+              {permissions.indexOf(REMOVE_BOOK) != -1 && <Button color="danger" onClick={(event) => removeBook(book)}>
+                Remove
+              </Button>}
+              {permissions.indexOf(UPDATE_BOOK) != -1 && <Button color="secondary" onClick={(event) => updateForm(book)}>
+                Update
+              </Button>}              
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    );
+  }
+  
+  const userView = (books) => {
+    <tbody>
+        {books && books.map((book) => (
+          <tr key={book.isbn}>
+            <td>{book.isbn}</td>
+            <td>{book.title}</td>
+            <td>{book.writer}</td>
+            <td>{new Date(book.publication).toLocaleDateString}</td>
+            <td></td>
+          </tr>
+        ))}
+      </tbody>
+  }
+
+  const searchBooks = (search) => {
+    axios.get(baseUrl + "search", {params: {query: query}}).then((response) => {
+      setBooks(response.data);
+    });
+  }
+
+  const getPermissions = () => {
+    let userId = Number.parseInt(Liferay.ThemeDisplay.getUserId());
+    axios.get(baseUrl + "getPermissions", {params: {userId: userId}}).then((response) => {
+      permissions = response.data;
+    });
+  }
+
   return (
     <div>
+      <form class="form-search">
+        <Input
+          class="input-medium search-query"
+          placeholder="Search"
+          type="search"
+          onChange={(event) => searchBooks(event.target.value)}
+        />
+      </form>
+    
       <h4>Book List</h4>
       <Table striped responsive>
         <thead>
@@ -66,32 +172,28 @@ const App = () => {
             <th>Title</th>
             <th>Writer</th>
             <th>Publication</th>
+            <th>Actions</th>
           </tr>
         </thead>
-        <tbody>
-          {books &&
-            books.map((book) => (
-              <tr key={book.isbn}>
-                <td>{book.isbn}</td>
-                <td>{book.title}</td>
-                <td>{book.writer}</td>
-                <td>{book.publication}</td>
-              </tr>
-            ))}
-        </tbody>
+        {(Liferay.ThemeDisplay.getUserName() === "") ?
+          userView(books) :
+          adminView(books)
+        }
+        
       </Table>
       <Button color="success" onClick={toggle}>
         Add Book
       </Button>
       <Modal isOpen={modal} toggle={toggle}>
         <form>
-          <ModalHeader toggle={toggle}>Modal title</ModalHeader>
+          <ModalHeader toggle={toggle}>{edit? "Save Book" : "Add Book"}</ModalHeader>
           <ModalBody>
             <Label for="iDisbn">ISBN</Label>
             <Input
               type="number"
               name="isbn"
               id="iDisbn"
+              value={isbn}
               onChange={(event) => setIsbn(event.target.value)}
             />
             <Label for="iDtitle">Title</Label>
@@ -99,6 +201,7 @@ const App = () => {
               type="text"
               name="title"
               id="iDtitle"
+              value={title}
               onChange={(event) => setTitle(event.target.value)}
             />
             <Label for="iDwriter">Writer</Label>
@@ -106,13 +209,24 @@ const App = () => {
               type="text"
               name="writer"
               id="iDwriter"
+              value={writer}
               onChange={(event) => setWriter(event.target.value)}
             />
+            <Label for="iDdate">Date</Label>
+            <Input
+              type="date"
+              name="date"
+              id="iDdate"
+              value={date}
+              onChange={(event) => setDate(event.target.value)}
+            />
           </ModalBody>
+          
           <ModalFooter>
-            <Button color="primary" onClick={(event) => addBook(event)}>
-              Add
-            </Button>
+            {edit ?
+              <Button color="primary" onClick={(event) => updateBook(event)}>Save</Button> :
+              <Button color="primary" onClick={(event) => addBook(event)}>Add</Button>
+            }
             <Button color="danger" onClick={toggle}>
               Cancel
             </Button>

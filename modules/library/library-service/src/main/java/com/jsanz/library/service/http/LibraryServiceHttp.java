@@ -82,9 +82,75 @@ public class LibraryServiceHttp {
 		}
 	}
 
+	public static com.jsanz.library.model.Library remove(
+		HttpPrincipal httpPrincipal, com.jsanz.library.model.Library library) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				LibraryServiceUtil.class, "remove", _removeParameterTypes1);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey, library);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (com.jsanz.library.model.Library)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
+	public static com.jsanz.library.model.Library update(
+		HttpPrincipal httpPrincipal, com.jsanz.library.model.Library library) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				LibraryServiceUtil.class, "update", _updateParameterTypes2);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey, library);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (com.jsanz.library.model.Library)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(LibraryServiceHttp.class);
 
 	private static final Class<?>[] _saveParameterTypes0 = new Class[] {
+		com.jsanz.library.model.Library.class
+	};
+	private static final Class<?>[] _removeParameterTypes1 = new Class[] {
+		com.jsanz.library.model.Library.class
+	};
+	private static final Class<?>[] _updateParameterTypes2 = new Class[] {
 		com.jsanz.library.model.Library.class
 	};
 

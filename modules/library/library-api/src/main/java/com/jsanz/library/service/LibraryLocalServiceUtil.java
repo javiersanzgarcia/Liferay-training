@@ -207,10 +207,22 @@ public class LibraryLocalServiceUtil {
 		return getService().fetchLibrary(ISBN);
 	}
 
+	public static java.util.List<com.jsanz.library.model.Library> findByISBN(
+		long ISBN) {
+
+		return getService().findByISBN(ISBN);
+	}
+
 	public static java.util.List<com.jsanz.library.model.Library> findByTitle(
 		String title) {
 
 		return getService().findByTitle(title);
+	}
+
+	public static java.util.List<com.jsanz.library.model.Library> findByWriter(
+		String writer) {
+
+		return getService().findByWriter(writer);
 	}
 
 	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery

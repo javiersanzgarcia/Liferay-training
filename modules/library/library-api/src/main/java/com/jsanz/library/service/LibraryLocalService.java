@@ -193,7 +193,11 @@ public interface LibraryLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Library fetchLibrary(long ISBN);
 
+	public List<Library> findByISBN(long ISBN);
+
 	public List<Library> findByTitle(String title);
+
+	public List<Library> findByWriter(String writer);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();

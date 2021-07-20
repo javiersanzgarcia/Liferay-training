@@ -210,10 +210,24 @@ public class LibraryLocalServiceWrapper
 	}
 
 	@Override
+	public java.util.List<com.jsanz.library.model.Library> findByISBN(
+		long ISBN) {
+
+		return _libraryLocalService.findByISBN(ISBN);
+	}
+
+	@Override
 	public java.util.List<com.jsanz.library.model.Library> findByTitle(
 		String title) {
 
 		return _libraryLocalService.findByTitle(title);
+	}
+
+	@Override
+	public java.util.List<com.jsanz.library.model.Library> findByWriter(
+		String writer) {
+
+		return _libraryLocalService.findByWriter(writer);
 	}
 
 	@Override

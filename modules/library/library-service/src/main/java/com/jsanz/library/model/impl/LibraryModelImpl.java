@@ -101,13 +101,13 @@ public class LibraryModelImpl
 
 	public static final String TX_MANAGER = "liferayTransactionManager";
 
-	public static final long TITLE_COLUMN_BITMASK = 1L;
+	public static final long ISBN_COLUMN_BITMASK = 1L;
 
-	public static final long UUID_COLUMN_BITMASK = 2L;
+	public static final long TITLE_COLUMN_BITMASK = 2L;
 
-	public static final long WRITER_COLUMN_BITMASK = 4L;
+	public static final long UUID_COLUMN_BITMASK = 4L;
 
-	public static final long ISBN_COLUMN_BITMASK = 8L;
+	public static final long WRITER_COLUMN_BITMASK = 8L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
@@ -347,7 +347,19 @@ public class LibraryModelImpl
 
 	@Override
 	public void setISBN(long ISBN) {
+		_columnBitmask |= ISBN_COLUMN_BITMASK;
+
+		if (!_setOriginalISBN) {
+			_setOriginalISBN = true;
+
+			_originalISBN = _ISBN;
+		}
+
 		_ISBN = ISBN;
+	}
+
+	public long getOriginalISBN() {
+		return _originalISBN;
 	}
 
 	@JSON
@@ -526,6 +538,10 @@ public class LibraryModelImpl
 
 		libraryModelImpl._originalUuid = libraryModelImpl._uuid;
 
+		libraryModelImpl._originalISBN = libraryModelImpl._ISBN;
+
+		libraryModelImpl._setOriginalISBN = false;
+
 		libraryModelImpl._originalTitle = libraryModelImpl._title;
 
 		libraryModelImpl._originalWriter = libraryModelImpl._writer;
@@ -650,6 +666,8 @@ public class LibraryModelImpl
 
 	private long _ISBN;
 
+	private long _originalISBN;
+	private boolean _setOriginalISBN;
 	private String _title;
 	private String _originalTitle;
 	private String _writer;

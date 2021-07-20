@@ -41,10 +41,24 @@ public class LibraryServiceWrapper
 	}
 
 	@Override
+	public com.jsanz.library.model.Library remove(
+		com.jsanz.library.model.Library library) {
+
+		return _libraryService.remove(library);
+	}
+
+	@Override
 	public com.jsanz.library.model.Library save(
 		com.jsanz.library.model.Library library) {
 
 		return _libraryService.save(library);
+	}
+
+	@Override
+	public com.jsanz.library.model.Library update(
+		com.jsanz.library.model.Library library) {
+
+		return _libraryService.update(library);
 	}
 
 	@Override

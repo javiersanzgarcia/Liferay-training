@@ -105,16 +105,17 @@ public class RestLibraryApplication extends Application {
     	DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(LibraryDTO.class, "lib", PortletClassLoaderUtil.getClassLoader());
     	
     	dynamicQuery.add(RestrictionsFactoryUtil.or(
-    			RestrictionsFactoryUtil.eq("lib.ISBN", query), 
+    			RestrictionsFactoryUtil.like("lib.ISBN", "%" + query + "%"), 
     			RestrictionsFactoryUtil.or(
-    					RestrictionsFactoryUtil.eq("lib.title", query), 
-    					RestrictionsFactoryUtil.eq("lib.writer", query))));
+    					RestrictionsFactoryUtil.like("lib.title", "%" + query + "%"),
+    					RestrictionsFactoryUtil.or(
+    							RestrictionsFactoryUtil.like("lib.publication", "%" + query + "%"), 
+    							RestrictionsFactoryUtil.like("lib.writer", "%" + query + "%")))));
     	    	
     	List<LibraryDTO> foundBooks = LibraryLocalServiceUtil.dynamicQuery(dynamicQuery);
     	return foundBooks;
     }
     
-    //wip
     @GET
     @Path("/getPermissions?userId={userId}")
     @Produces("application/json")

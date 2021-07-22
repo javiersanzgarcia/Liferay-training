@@ -207,6 +207,19 @@ public class LibraryLocalServiceUtil {
 		return getService().fetchLibrary(ISBN);
 	}
 
+	public static java.util.List<com.jsanz.library.model.Library> findByAll(
+		String search) {
+
+		return getService().findByAll(search);
+	}
+
+	public static java.util.List<com.jsanz.library.model.Library> findByAll2(
+			String search)
+		throws com.liferay.portal.kernel.exception.SystemException {
+
+		return getService().findByAll2(search);
+	}
+
 	public static java.util.List<com.jsanz.library.model.Library> findByTitle(
 		String title) {
 

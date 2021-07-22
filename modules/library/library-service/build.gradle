@@ -2,6 +2,12 @@ dependencies {
 	compile project(":modules:library:library-api")
 
 	compileOnly group: "com.liferay.portal", name: "release.portal.api"
+	// https://mvnrepository.com/artifact/com.liferay/com.liferay.portal.dao.orm.custom.sql
+	compileOnly group: 'com.liferay', name: 'com.liferay.portal.dao.orm.custom.sql', version: '1.0.1'
+
+
+
+
 }
 
 buildService {

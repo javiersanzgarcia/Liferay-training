@@ -193,6 +193,10 @@ public interface LibraryLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Library fetchLibrary(long ISBN);
 
+	public List<Library> findByAll(String search);
+
+	public List<Library> findByAll2(String search) throws SystemException;
+
 	public List<Library> findByTitle(String title);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

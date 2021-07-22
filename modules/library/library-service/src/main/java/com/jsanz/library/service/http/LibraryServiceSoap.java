@@ -83,6 +83,44 @@ public class LibraryServiceSoap {
 		}
 	}
 
+	public static com.jsanz.library.model.LibrarySoap delete(
+			com.jsanz.library.model.LibrarySoap library)
+		throws RemoteException {
+
+		try {
+			com.jsanz.library.model.Library returnValue =
+				LibraryServiceUtil.delete(
+					com.jsanz.library.model.impl.LibraryModelImpl.toModel(
+						library));
+
+			return com.jsanz.library.model.LibrarySoap.toSoapModel(returnValue);
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	public static com.jsanz.library.model.LibrarySoap update(
+			com.jsanz.library.model.LibrarySoap library)
+		throws RemoteException {
+
+		try {
+			com.jsanz.library.model.Library returnValue =
+				LibraryServiceUtil.update(
+					com.jsanz.library.model.impl.LibraryModelImpl.toModel(
+						library));
+
+			return com.jsanz.library.model.LibrarySoap.toSoapModel(returnValue);
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(LibraryServiceSoap.class);
 
 }

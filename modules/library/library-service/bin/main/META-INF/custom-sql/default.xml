@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<custom-sql>
+    <sql id="com.jsanz.library.service.persistence.LibraryFinder.findByAll">
+        <![CDATA[
+            SELECT
+            JAVI_Library.*
+            FROM
+                JAVI_Library
+            WHERE
+            (JAVI_Library.title LIKE ?) OR
+            (JAVI_Library.writer LIKE ?) OR
+            (JAVI_Library.publication LIKE ?) OR
+            (JAVI_Library.ISBN  LIKE ?)
+
+        ]]>
+    </sql>
+</custom-sql>

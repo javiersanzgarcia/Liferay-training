@@ -69,7 +69,7 @@ public class RestLibraryApplication extends Application {
     @Produces("application/json")
     public List<LibraryDTO> find(@QueryParam("query") String search) {
         List<LibraryDTO> books = new ArrayList<>();
-        List<Library> booksSB = libraryLocalService.findByAll(search);
+        List<Library> booksSB = libraryLocalService.findByAll2(search);
         for (Library library : booksSB) {
             LibraryDTO book = new LibraryDTO(library);
             books.add(book);

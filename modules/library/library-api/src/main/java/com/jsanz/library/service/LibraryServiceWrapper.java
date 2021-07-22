@@ -30,6 +30,13 @@ public class LibraryServiceWrapper
 		_libraryService = libraryService;
 	}
 
+	@Override
+	public com.jsanz.library.model.Library delete(
+		com.jsanz.library.model.Library library) {
+
+		return _libraryService.delete(library);
+	}
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *
@@ -45,6 +52,13 @@ public class LibraryServiceWrapper
 		com.jsanz.library.model.Library library) {
 
 		return _libraryService.save(library);
+	}
+
+	@Override
+	public com.jsanz.library.model.Library update(
+		com.jsanz.library.model.Library library) {
+
+		return _libraryService.update(library);
 	}
 
 	@Override

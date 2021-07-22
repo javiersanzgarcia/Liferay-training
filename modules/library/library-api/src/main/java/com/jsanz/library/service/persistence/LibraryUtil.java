@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 
 import java.io.Serializable;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -286,7 +287,7 @@ public class LibraryUtil {
 	}
 
 	/**
-	 * Returns all the libraries where title = &#63;.
+	 * Returns all the libraries where title LIKE &#63;.
 	 *
 	 * @param title the title
 	 * @return the matching libraries
@@ -296,7 +297,7 @@ public class LibraryUtil {
 	}
 
 	/**
-	 * Returns a range of all the libraries where title = &#63;.
+	 * Returns a range of all the libraries where title LIKE &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LibraryModelImpl</code>.
@@ -312,7 +313,7 @@ public class LibraryUtil {
 	}
 
 	/**
-	 * Returns an ordered range of all the libraries where title = &#63;.
+	 * Returns an ordered range of all the libraries where title LIKE &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LibraryModelImpl</code>.
@@ -333,7 +334,7 @@ public class LibraryUtil {
 	}
 
 	/**
-	 * Returns an ordered range of all the libraries where title = &#63;.
+	 * Returns an ordered range of all the libraries where title LIKE &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LibraryModelImpl</code>.
@@ -355,7 +356,7 @@ public class LibraryUtil {
 	}
 
 	/**
-	 * Returns the first library in the ordered set where title = &#63;.
+	 * Returns the first library in the ordered set where title LIKE &#63;.
 	 *
 	 * @param title the title
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
@@ -370,7 +371,7 @@ public class LibraryUtil {
 	}
 
 	/**
-	 * Returns the first library in the ordered set where title = &#63;.
+	 * Returns the first library in the ordered set where title LIKE &#63;.
 	 *
 	 * @param title the title
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
@@ -383,7 +384,7 @@ public class LibraryUtil {
 	}
 
 	/**
-	 * Returns the last library in the ordered set where title = &#63;.
+	 * Returns the last library in the ordered set where title LIKE &#63;.
 	 *
 	 * @param title the title
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
@@ -398,7 +399,7 @@ public class LibraryUtil {
 	}
 
 	/**
-	 * Returns the last library in the ordered set where title = &#63;.
+	 * Returns the last library in the ordered set where title LIKE &#63;.
 	 *
 	 * @param title the title
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
@@ -411,7 +412,7 @@ public class LibraryUtil {
 	}
 
 	/**
-	 * Returns the libraries before and after the current library in the ordered set where title = &#63;.
+	 * Returns the libraries before and after the current library in the ordered set where title LIKE &#63;.
 	 *
 	 * @param ISBN the primary key of the current library
 	 * @param title the title
@@ -429,7 +430,7 @@ public class LibraryUtil {
 	}
 
 	/**
-	 * Removes all the libraries where title = &#63; from the database.
+	 * Removes all the libraries where title LIKE &#63; from the database.
 	 *
 	 * @param title the title
 	 */
@@ -438,7 +439,7 @@ public class LibraryUtil {
 	}
 
 	/**
-	 * Returns the number of libraries where title = &#63;.
+	 * Returns the number of libraries where title LIKE &#63;.
 	 *
 	 * @param title the title
 	 * @return the number of matching libraries
@@ -448,7 +449,7 @@ public class LibraryUtil {
 	}
 
 	/**
-	 * Returns all the libraries where writer = &#63;.
+	 * Returns all the libraries where writer LIKE &#63;.
 	 *
 	 * @param writer the writer
 	 * @return the matching libraries
@@ -458,7 +459,7 @@ public class LibraryUtil {
 	}
 
 	/**
-	 * Returns a range of all the libraries where writer = &#63;.
+	 * Returns a range of all the libraries where writer LIKE &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LibraryModelImpl</code>.
@@ -476,7 +477,7 @@ public class LibraryUtil {
 	}
 
 	/**
-	 * Returns an ordered range of all the libraries where writer = &#63;.
+	 * Returns an ordered range of all the libraries where writer LIKE &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LibraryModelImpl</code>.
@@ -497,7 +498,7 @@ public class LibraryUtil {
 	}
 
 	/**
-	 * Returns an ordered range of all the libraries where writer = &#63;.
+	 * Returns an ordered range of all the libraries where writer LIKE &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LibraryModelImpl</code>.
@@ -519,7 +520,7 @@ public class LibraryUtil {
 	}
 
 	/**
-	 * Returns the first library in the ordered set where writer = &#63;.
+	 * Returns the first library in the ordered set where writer LIKE &#63;.
 	 *
 	 * @param writer the writer
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
@@ -534,7 +535,7 @@ public class LibraryUtil {
 	}
 
 	/**
-	 * Returns the first library in the ordered set where writer = &#63;.
+	 * Returns the first library in the ordered set where writer LIKE &#63;.
 	 *
 	 * @param writer the writer
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
@@ -547,7 +548,7 @@ public class LibraryUtil {
 	}
 
 	/**
-	 * Returns the last library in the ordered set where writer = &#63;.
+	 * Returns the last library in the ordered set where writer LIKE &#63;.
 	 *
 	 * @param writer the writer
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
@@ -562,7 +563,7 @@ public class LibraryUtil {
 	}
 
 	/**
-	 * Returns the last library in the ordered set where writer = &#63;.
+	 * Returns the last library in the ordered set where writer LIKE &#63;.
 	 *
 	 * @param writer the writer
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
@@ -575,7 +576,7 @@ public class LibraryUtil {
 	}
 
 	/**
-	 * Returns the libraries before and after the current library in the ordered set where writer = &#63;.
+	 * Returns the libraries before and after the current library in the ordered set where writer LIKE &#63;.
 	 *
 	 * @param ISBN the primary key of the current library
 	 * @param writer the writer
@@ -593,7 +594,7 @@ public class LibraryUtil {
 	}
 
 	/**
-	 * Removes all the libraries where writer = &#63; from the database.
+	 * Removes all the libraries where writer LIKE &#63; from the database.
 	 *
 	 * @param writer the writer
 	 */
@@ -602,13 +603,181 @@ public class LibraryUtil {
 	}
 
 	/**
-	 * Returns the number of libraries where writer = &#63;.
+	 * Returns the number of libraries where writer LIKE &#63;.
 	 *
 	 * @param writer the writer
 	 * @return the number of matching libraries
 	 */
 	public static int countByWriter(String writer) {
 		return getPersistence().countByWriter(writer);
+	}
+
+	/**
+	 * Returns all the libraries where publication = &#63;.
+	 *
+	 * @param publication the publication
+	 * @return the matching libraries
+	 */
+	public static List<Library> findByPublication(Date publication) {
+		return getPersistence().findByPublication(publication);
+	}
+
+	/**
+	 * Returns a range of all the libraries where publication = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LibraryModelImpl</code>.
+	 * </p>
+	 *
+	 * @param publication the publication
+	 * @param start the lower bound of the range of libraries
+	 * @param end the upper bound of the range of libraries (not inclusive)
+	 * @return the range of matching libraries
+	 */
+	public static List<Library> findByPublication(
+		Date publication, int start, int end) {
+
+		return getPersistence().findByPublication(publication, start, end);
+	}
+
+	/**
+	 * Returns an ordered range of all the libraries where publication = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LibraryModelImpl</code>.
+	 * </p>
+	 *
+	 * @param publication the publication
+	 * @param start the lower bound of the range of libraries
+	 * @param end the upper bound of the range of libraries (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching libraries
+	 */
+	public static List<Library> findByPublication(
+		Date publication, int start, int end,
+		OrderByComparator<Library> orderByComparator) {
+
+		return getPersistence().findByPublication(
+			publication, start, end, orderByComparator);
+	}
+
+	/**
+	 * Returns an ordered range of all the libraries where publication = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LibraryModelImpl</code>.
+	 * </p>
+	 *
+	 * @param publication the publication
+	 * @param start the lower bound of the range of libraries
+	 * @param end the upper bound of the range of libraries (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching libraries
+	 */
+	public static List<Library> findByPublication(
+		Date publication, int start, int end,
+		OrderByComparator<Library> orderByComparator, boolean useFinderCache) {
+
+		return getPersistence().findByPublication(
+			publication, start, end, orderByComparator, useFinderCache);
+	}
+
+	/**
+	 * Returns the first library in the ordered set where publication = &#63;.
+	 *
+	 * @param publication the publication
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching library
+	 * @throws NoSuchLibraryException if a matching library could not be found
+	 */
+	public static Library findByPublication_First(
+			Date publication, OrderByComparator<Library> orderByComparator)
+		throws com.jsanz.library.exception.NoSuchLibraryException {
+
+		return getPersistence().findByPublication_First(
+			publication, orderByComparator);
+	}
+
+	/**
+	 * Returns the first library in the ordered set where publication = &#63;.
+	 *
+	 * @param publication the publication
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching library, or <code>null</code> if a matching library could not be found
+	 */
+	public static Library fetchByPublication_First(
+		Date publication, OrderByComparator<Library> orderByComparator) {
+
+		return getPersistence().fetchByPublication_First(
+			publication, orderByComparator);
+	}
+
+	/**
+	 * Returns the last library in the ordered set where publication = &#63;.
+	 *
+	 * @param publication the publication
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching library
+	 * @throws NoSuchLibraryException if a matching library could not be found
+	 */
+	public static Library findByPublication_Last(
+			Date publication, OrderByComparator<Library> orderByComparator)
+		throws com.jsanz.library.exception.NoSuchLibraryException {
+
+		return getPersistence().findByPublication_Last(
+			publication, orderByComparator);
+	}
+
+	/**
+	 * Returns the last library in the ordered set where publication = &#63;.
+	 *
+	 * @param publication the publication
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching library, or <code>null</code> if a matching library could not be found
+	 */
+	public static Library fetchByPublication_Last(
+		Date publication, OrderByComparator<Library> orderByComparator) {
+
+		return getPersistence().fetchByPublication_Last(
+			publication, orderByComparator);
+	}
+
+	/**
+	 * Returns the libraries before and after the current library in the ordered set where publication = &#63;.
+	 *
+	 * @param ISBN the primary key of the current library
+	 * @param publication the publication
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next library
+	 * @throws NoSuchLibraryException if a library with the primary key could not be found
+	 */
+	public static Library[] findByPublication_PrevAndNext(
+			long ISBN, Date publication,
+			OrderByComparator<Library> orderByComparator)
+		throws com.jsanz.library.exception.NoSuchLibraryException {
+
+		return getPersistence().findByPublication_PrevAndNext(
+			ISBN, publication, orderByComparator);
+	}
+
+	/**
+	 * Removes all the libraries where publication = &#63; from the database.
+	 *
+	 * @param publication the publication
+	 */
+	public static void removeByPublication(Date publication) {
+		getPersistence().removeByPublication(publication);
+	}
+
+	/**
+	 * Returns the number of libraries where publication = &#63;.
+	 *
+	 * @param publication the publication
+	 * @return the number of matching libraries
+	 */
+	public static int countByPublication(Date publication) {
+		return getPersistence().countByPublication(publication);
 	}
 
 	/**

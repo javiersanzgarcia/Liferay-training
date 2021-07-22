@@ -210,6 +210,21 @@ public class LibraryLocalServiceWrapper
 	}
 
 	@Override
+	public java.util.List<com.jsanz.library.model.Library> findByAll(
+		String search) {
+
+		return _libraryLocalService.findByAll(search);
+	}
+
+	@Override
+	public java.util.List<com.jsanz.library.model.Library> findByAll2(
+			String search)
+		throws com.liferay.portal.kernel.exception.SystemException {
+
+		return _libraryLocalService.findByAll2(search);
+	}
+
+	@Override
 	public java.util.List<com.jsanz.library.model.Library> findByTitle(
 		String title) {
 

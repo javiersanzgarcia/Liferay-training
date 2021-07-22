@@ -101,13 +101,15 @@ public class LibraryModelImpl
 
 	public static final String TX_MANAGER = "liferayTransactionManager";
 
-	public static final long TITLE_COLUMN_BITMASK = 1L;
+	public static final long PUBLICATION_COLUMN_BITMASK = 1L;
 
-	public static final long UUID_COLUMN_BITMASK = 2L;
+	public static final long TITLE_COLUMN_BITMASK = 2L;
 
-	public static final long WRITER_COLUMN_BITMASK = 4L;
+	public static final long UUID_COLUMN_BITMASK = 4L;
 
-	public static final long ISBN_COLUMN_BITMASK = 8L;
+	public static final long WRITER_COLUMN_BITMASK = 8L;
+
+	public static final long ISBN_COLUMN_BITMASK = 16L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
@@ -410,7 +412,17 @@ public class LibraryModelImpl
 
 	@Override
 	public void setPublication(Date publication) {
+		_columnBitmask |= PUBLICATION_COLUMN_BITMASK;
+
+		if (_originalPublication == null) {
+			_originalPublication = _publication;
+		}
+
 		_publication = publication;
+	}
+
+	public Date getOriginalPublication() {
+		return _originalPublication;
 	}
 
 	public long getColumnBitmask() {
@@ -529,6 +541,8 @@ public class LibraryModelImpl
 		libraryModelImpl._originalTitle = libraryModelImpl._title;
 
 		libraryModelImpl._originalWriter = libraryModelImpl._writer;
+
+		libraryModelImpl._originalPublication = libraryModelImpl._publication;
 
 		libraryModelImpl._columnBitmask = 0;
 	}
@@ -655,6 +669,7 @@ public class LibraryModelImpl
 	private String _writer;
 	private String _originalWriter;
 	private Date _publication;
+	private Date _originalPublication;
 	private long _columnBitmask;
 	private Library _escapedModel;
 

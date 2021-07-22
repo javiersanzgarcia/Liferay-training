@@ -37,6 +37,7 @@ import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.SetUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 
@@ -44,6 +45,9 @@ import java.io.Serializable;
 
 import java.lang.reflect.InvocationHandler;
 
+import java.sql.Timestamp;
+
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -616,11 +620,10 @@ public class LibraryPersistenceImpl
 		"(library.uuid IS NULL OR library.uuid = '')";
 
 	private FinderPath _finderPathWithPaginationFindByTitle;
-	private FinderPath _finderPathWithoutPaginationFindByTitle;
-	private FinderPath _finderPathCountByTitle;
+	private FinderPath _finderPathWithPaginationCountByTitle;
 
 	/**
-	 * Returns all the libraries where title = &#63;.
+	 * Returns all the libraries where title LIKE &#63;.
 	 *
 	 * @param title the title
 	 * @return the matching libraries
@@ -631,7 +634,7 @@ public class LibraryPersistenceImpl
 	}
 
 	/**
-	 * Returns a range of all the libraries where title = &#63;.
+	 * Returns a range of all the libraries where title LIKE &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LibraryModelImpl</code>.
@@ -648,7 +651,7 @@ public class LibraryPersistenceImpl
 	}
 
 	/**
-	 * Returns an ordered range of all the libraries where title = &#63;.
+	 * Returns an ordered range of all the libraries where title LIKE &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LibraryModelImpl</code>.
@@ -669,7 +672,7 @@ public class LibraryPersistenceImpl
 	}
 
 	/**
-	 * Returns an ordered range of all the libraries where title = &#63;.
+	 * Returns an ordered range of all the libraries where title LIKE &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LibraryModelImpl</code>.
@@ -692,18 +695,8 @@ public class LibraryPersistenceImpl
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
-		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
-			(orderByComparator == null)) {
-
-			if (useFinderCache) {
-				finderPath = _finderPathWithoutPaginationFindByTitle;
-				finderArgs = new Object[] {title};
-			}
-		}
-		else if (useFinderCache) {
-			finderPath = _finderPathWithPaginationFindByTitle;
-			finderArgs = new Object[] {title, start, end, orderByComparator};
-		}
+		finderPath = _finderPathWithPaginationFindByTitle;
+		finderArgs = new Object[] {title, start, end, orderByComparator};
 
 		List<Library> list = null;
 
@@ -713,7 +706,9 @@ public class LibraryPersistenceImpl
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Library library : list) {
-					if (!title.equals(library.getTitle())) {
+					if (!StringUtil.wildcardMatches(
+							library.getTitle(), title, '_', '%', '\\', true)) {
+
 						list = null;
 
 						break;
@@ -790,7 +785,7 @@ public class LibraryPersistenceImpl
 	}
 
 	/**
-	 * Returns the first library in the ordered set where title = &#63;.
+	 * Returns the first library in the ordered set where title LIKE &#63;.
 	 *
 	 * @param title the title
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
@@ -812,7 +807,7 @@ public class LibraryPersistenceImpl
 
 		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		sb.append("title=");
+		sb.append("titleLIKE");
 		sb.append(title);
 
 		sb.append("}");
@@ -821,7 +816,7 @@ public class LibraryPersistenceImpl
 	}
 
 	/**
-	 * Returns the first library in the ordered set where title = &#63;.
+	 * Returns the first library in the ordered set where title LIKE &#63;.
 	 *
 	 * @param title the title
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
@@ -841,7 +836,7 @@ public class LibraryPersistenceImpl
 	}
 
 	/**
-	 * Returns the last library in the ordered set where title = &#63;.
+	 * Returns the last library in the ordered set where title LIKE &#63;.
 	 *
 	 * @param title the title
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
@@ -863,7 +858,7 @@ public class LibraryPersistenceImpl
 
 		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		sb.append("title=");
+		sb.append("titleLIKE");
 		sb.append(title);
 
 		sb.append("}");
@@ -872,7 +867,7 @@ public class LibraryPersistenceImpl
 	}
 
 	/**
-	 * Returns the last library in the ordered set where title = &#63;.
+	 * Returns the last library in the ordered set where title LIKE &#63;.
 	 *
 	 * @param title the title
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
@@ -899,7 +894,7 @@ public class LibraryPersistenceImpl
 	}
 
 	/**
-	 * Returns the libraries before and after the current library in the ordered set where title = &#63;.
+	 * Returns the libraries before and after the current library in the ordered set where title LIKE &#63;.
 	 *
 	 * @param ISBN the primary key of the current library
 	 * @param title the title
@@ -1062,7 +1057,7 @@ public class LibraryPersistenceImpl
 	}
 
 	/**
-	 * Removes all the libraries where title = &#63; from the database.
+	 * Removes all the libraries where title LIKE &#63; from the database.
 	 *
 	 * @param title the title
 	 */
@@ -1077,7 +1072,7 @@ public class LibraryPersistenceImpl
 	}
 
 	/**
-	 * Returns the number of libraries where title = &#63;.
+	 * Returns the number of libraries where title LIKE &#63;.
 	 *
 	 * @param title the title
 	 * @return the number of matching libraries
@@ -1086,7 +1081,7 @@ public class LibraryPersistenceImpl
 	public int countByTitle(String title) {
 		title = Objects.toString(title, "");
 
-		FinderPath finderPath = _finderPathCountByTitle;
+		FinderPath finderPath = _finderPathWithPaginationCountByTitle;
 
 		Object[] finderArgs = new Object[] {title};
 
@@ -1139,17 +1134,16 @@ public class LibraryPersistenceImpl
 	}
 
 	private static final String _FINDER_COLUMN_TITLE_TITLE_2 =
-		"library.title = ?";
+		"library.title LIKE ?";
 
 	private static final String _FINDER_COLUMN_TITLE_TITLE_3 =
-		"(library.title IS NULL OR library.title = '')";
+		"(library.title IS NULL OR library.title LIKE '')";
 
 	private FinderPath _finderPathWithPaginationFindByWriter;
-	private FinderPath _finderPathWithoutPaginationFindByWriter;
-	private FinderPath _finderPathCountByWriter;
+	private FinderPath _finderPathWithPaginationCountByWriter;
 
 	/**
-	 * Returns all the libraries where writer = &#63;.
+	 * Returns all the libraries where writer LIKE &#63;.
 	 *
 	 * @param writer the writer
 	 * @return the matching libraries
@@ -1160,7 +1154,7 @@ public class LibraryPersistenceImpl
 	}
 
 	/**
-	 * Returns a range of all the libraries where writer = &#63;.
+	 * Returns a range of all the libraries where writer LIKE &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LibraryModelImpl</code>.
@@ -1177,7 +1171,7 @@ public class LibraryPersistenceImpl
 	}
 
 	/**
-	 * Returns an ordered range of all the libraries where writer = &#63;.
+	 * Returns an ordered range of all the libraries where writer LIKE &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LibraryModelImpl</code>.
@@ -1198,7 +1192,7 @@ public class LibraryPersistenceImpl
 	}
 
 	/**
-	 * Returns an ordered range of all the libraries where writer = &#63;.
+	 * Returns an ordered range of all the libraries where writer LIKE &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LibraryModelImpl</code>.
@@ -1221,18 +1215,8 @@ public class LibraryPersistenceImpl
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
-		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
-			(orderByComparator == null)) {
-
-			if (useFinderCache) {
-				finderPath = _finderPathWithoutPaginationFindByWriter;
-				finderArgs = new Object[] {writer};
-			}
-		}
-		else if (useFinderCache) {
-			finderPath = _finderPathWithPaginationFindByWriter;
-			finderArgs = new Object[] {writer, start, end, orderByComparator};
-		}
+		finderPath = _finderPathWithPaginationFindByWriter;
+		finderArgs = new Object[] {writer, start, end, orderByComparator};
 
 		List<Library> list = null;
 
@@ -1242,7 +1226,10 @@ public class LibraryPersistenceImpl
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Library library : list) {
-					if (!writer.equals(library.getWriter())) {
+					if (!StringUtil.wildcardMatches(
+							library.getWriter(), writer, '_', '%', '\\',
+							true)) {
+
 						list = null;
 
 						break;
@@ -1319,7 +1306,7 @@ public class LibraryPersistenceImpl
 	}
 
 	/**
-	 * Returns the first library in the ordered set where writer = &#63;.
+	 * Returns the first library in the ordered set where writer LIKE &#63;.
 	 *
 	 * @param writer the writer
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
@@ -1341,7 +1328,7 @@ public class LibraryPersistenceImpl
 
 		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		sb.append("writer=");
+		sb.append("writerLIKE");
 		sb.append(writer);
 
 		sb.append("}");
@@ -1350,7 +1337,7 @@ public class LibraryPersistenceImpl
 	}
 
 	/**
-	 * Returns the first library in the ordered set where writer = &#63;.
+	 * Returns the first library in the ordered set where writer LIKE &#63;.
 	 *
 	 * @param writer the writer
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
@@ -1370,7 +1357,7 @@ public class LibraryPersistenceImpl
 	}
 
 	/**
-	 * Returns the last library in the ordered set where writer = &#63;.
+	 * Returns the last library in the ordered set where writer LIKE &#63;.
 	 *
 	 * @param writer the writer
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
@@ -1392,7 +1379,7 @@ public class LibraryPersistenceImpl
 
 		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		sb.append("writer=");
+		sb.append("writerLIKE");
 		sb.append(writer);
 
 		sb.append("}");
@@ -1401,7 +1388,7 @@ public class LibraryPersistenceImpl
 	}
 
 	/**
-	 * Returns the last library in the ordered set where writer = &#63;.
+	 * Returns the last library in the ordered set where writer LIKE &#63;.
 	 *
 	 * @param writer the writer
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
@@ -1428,7 +1415,7 @@ public class LibraryPersistenceImpl
 	}
 
 	/**
-	 * Returns the libraries before and after the current library in the ordered set where writer = &#63;.
+	 * Returns the libraries before and after the current library in the ordered set where writer LIKE &#63;.
 	 *
 	 * @param ISBN the primary key of the current library
 	 * @param writer the writer
@@ -1591,7 +1578,7 @@ public class LibraryPersistenceImpl
 	}
 
 	/**
-	 * Removes all the libraries where writer = &#63; from the database.
+	 * Removes all the libraries where writer LIKE &#63; from the database.
 	 *
 	 * @param writer the writer
 	 */
@@ -1606,7 +1593,7 @@ public class LibraryPersistenceImpl
 	}
 
 	/**
-	 * Returns the number of libraries where writer = &#63;.
+	 * Returns the number of libraries where writer LIKE &#63;.
 	 *
 	 * @param writer the writer
 	 * @return the number of matching libraries
@@ -1615,7 +1602,7 @@ public class LibraryPersistenceImpl
 	public int countByWriter(String writer) {
 		writer = Objects.toString(writer, "");
 
-		FinderPath finderPath = _finderPathCountByWriter;
+		FinderPath finderPath = _finderPathWithPaginationCountByWriter;
 
 		Object[] finderArgs = new Object[] {writer};
 
@@ -1668,10 +1655,544 @@ public class LibraryPersistenceImpl
 	}
 
 	private static final String _FINDER_COLUMN_WRITER_WRITER_2 =
-		"library.writer = ?";
+		"library.writer LIKE ?";
 
 	private static final String _FINDER_COLUMN_WRITER_WRITER_3 =
-		"(library.writer IS NULL OR library.writer = '')";
+		"(library.writer IS NULL OR library.writer LIKE '')";
+
+	private FinderPath _finderPathWithPaginationFindByPublication;
+	private FinderPath _finderPathWithoutPaginationFindByPublication;
+	private FinderPath _finderPathCountByPublication;
+
+	/**
+	 * Returns all the libraries where publication = &#63;.
+	 *
+	 * @param publication the publication
+	 * @return the matching libraries
+	 */
+	@Override
+	public List<Library> findByPublication(Date publication) {
+		return findByPublication(
+			publication, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the libraries where publication = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LibraryModelImpl</code>.
+	 * </p>
+	 *
+	 * @param publication the publication
+	 * @param start the lower bound of the range of libraries
+	 * @param end the upper bound of the range of libraries (not inclusive)
+	 * @return the range of matching libraries
+	 */
+	@Override
+	public List<Library> findByPublication(
+		Date publication, int start, int end) {
+
+		return findByPublication(publication, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the libraries where publication = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LibraryModelImpl</code>.
+	 * </p>
+	 *
+	 * @param publication the publication
+	 * @param start the lower bound of the range of libraries
+	 * @param end the upper bound of the range of libraries (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching libraries
+	 */
+	@Override
+	public List<Library> findByPublication(
+		Date publication, int start, int end,
+		OrderByComparator<Library> orderByComparator) {
+
+		return findByPublication(
+			publication, start, end, orderByComparator, true);
+	}
+
+	/**
+	 * Returns an ordered range of all the libraries where publication = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LibraryModelImpl</code>.
+	 * </p>
+	 *
+	 * @param publication the publication
+	 * @param start the lower bound of the range of libraries
+	 * @param end the upper bound of the range of libraries (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching libraries
+	 */
+	@Override
+	public List<Library> findByPublication(
+		Date publication, int start, int end,
+		OrderByComparator<Library> orderByComparator, boolean useFinderCache) {
+
+		FinderPath finderPath = null;
+		Object[] finderArgs = null;
+
+		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
+			(orderByComparator == null)) {
+
+			if (useFinderCache) {
+				finderPath = _finderPathWithoutPaginationFindByPublication;
+				finderArgs = new Object[] {_getTime(publication)};
+			}
+		}
+		else if (useFinderCache) {
+			finderPath = _finderPathWithPaginationFindByPublication;
+			finderArgs = new Object[] {
+				_getTime(publication), start, end, orderByComparator
+			};
+		}
+
+		List<Library> list = null;
+
+		if (useFinderCache) {
+			list = (List<Library>)finderCache.getResult(
+				finderPath, finderArgs, this);
+
+			if ((list != null) && !list.isEmpty()) {
+				for (Library library : list) {
+					if (!Objects.equals(
+							publication, library.getPublication())) {
+
+						list = null;
+
+						break;
+					}
+				}
+			}
+		}
+
+		if (list == null) {
+			StringBundler sb = null;
+
+			if (orderByComparator != null) {
+				sb = new StringBundler(
+					3 + (orderByComparator.getOrderByFields().length * 2));
+			}
+			else {
+				sb = new StringBundler(3);
+			}
+
+			sb.append(_SQL_SELECT_LIBRARY_WHERE);
+
+			boolean bindPublication = false;
+
+			if (publication == null) {
+				sb.append(_FINDER_COLUMN_PUBLICATION_PUBLICATION_1);
+			}
+			else {
+				bindPublication = true;
+
+				sb.append(_FINDER_COLUMN_PUBLICATION_PUBLICATION_2);
+			}
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(
+					sb, _ORDER_BY_ENTITY_ALIAS, orderByComparator);
+			}
+			else {
+				sb.append(LibraryModelImpl.ORDER_BY_JPQL);
+			}
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				if (bindPublication) {
+					queryPos.add(new Timestamp(publication.getTime()));
+				}
+
+				list = (List<Library>)QueryUtil.list(
+					query, getDialect(), start, end);
+
+				cacheResult(list);
+
+				if (useFinderCache) {
+					finderCache.putResult(finderPath, finderArgs, list);
+				}
+			}
+			catch (Exception exception) {
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns the first library in the ordered set where publication = &#63;.
+	 *
+	 * @param publication the publication
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching library
+	 * @throws NoSuchLibraryException if a matching library could not be found
+	 */
+	@Override
+	public Library findByPublication_First(
+			Date publication, OrderByComparator<Library> orderByComparator)
+		throws NoSuchLibraryException {
+
+		Library library = fetchByPublication_First(
+			publication, orderByComparator);
+
+		if (library != null) {
+			return library;
+		}
+
+		StringBundler sb = new StringBundler(4);
+
+		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		sb.append("publication=");
+		sb.append(publication);
+
+		sb.append("}");
+
+		throw new NoSuchLibraryException(sb.toString());
+	}
+
+	/**
+	 * Returns the first library in the ordered set where publication = &#63;.
+	 *
+	 * @param publication the publication
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching library, or <code>null</code> if a matching library could not be found
+	 */
+	@Override
+	public Library fetchByPublication_First(
+		Date publication, OrderByComparator<Library> orderByComparator) {
+
+		List<Library> list = findByPublication(
+			publication, 0, 1, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the last library in the ordered set where publication = &#63;.
+	 *
+	 * @param publication the publication
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching library
+	 * @throws NoSuchLibraryException if a matching library could not be found
+	 */
+	@Override
+	public Library findByPublication_Last(
+			Date publication, OrderByComparator<Library> orderByComparator)
+		throws NoSuchLibraryException {
+
+		Library library = fetchByPublication_Last(
+			publication, orderByComparator);
+
+		if (library != null) {
+			return library;
+		}
+
+		StringBundler sb = new StringBundler(4);
+
+		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		sb.append("publication=");
+		sb.append(publication);
+
+		sb.append("}");
+
+		throw new NoSuchLibraryException(sb.toString());
+	}
+
+	/**
+	 * Returns the last library in the ordered set where publication = &#63;.
+	 *
+	 * @param publication the publication
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching library, or <code>null</code> if a matching library could not be found
+	 */
+	@Override
+	public Library fetchByPublication_Last(
+		Date publication, OrderByComparator<Library> orderByComparator) {
+
+		int count = countByPublication(publication);
+
+		if (count == 0) {
+			return null;
+		}
+
+		List<Library> list = findByPublication(
+			publication, count - 1, count, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the libraries before and after the current library in the ordered set where publication = &#63;.
+	 *
+	 * @param ISBN the primary key of the current library
+	 * @param publication the publication
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next library
+	 * @throws NoSuchLibraryException if a library with the primary key could not be found
+	 */
+	@Override
+	public Library[] findByPublication_PrevAndNext(
+			long ISBN, Date publication,
+			OrderByComparator<Library> orderByComparator)
+		throws NoSuchLibraryException {
+
+		Library library = findByPrimaryKey(ISBN);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			Library[] array = new LibraryImpl[3];
+
+			array[0] = getByPublication_PrevAndNext(
+				session, library, publication, orderByComparator, true);
+
+			array[1] = library;
+
+			array[2] = getByPublication_PrevAndNext(
+				session, library, publication, orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception exception) {
+			throw processException(exception);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected Library getByPublication_PrevAndNext(
+		Session session, Library library, Date publication,
+		OrderByComparator<Library> orderByComparator, boolean previous) {
+
+		StringBundler sb = null;
+
+		if (orderByComparator != null) {
+			sb = new StringBundler(
+				4 + (orderByComparator.getOrderByConditionFields().length * 3) +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			sb = new StringBundler(3);
+		}
+
+		sb.append(_SQL_SELECT_LIBRARY_WHERE);
+
+		boolean bindPublication = false;
+
+		if (publication == null) {
+			sb.append(_FINDER_COLUMN_PUBLICATION_PUBLICATION_1);
+		}
+		else {
+			bindPublication = true;
+
+			sb.append(_FINDER_COLUMN_PUBLICATION_PUBLICATION_2);
+		}
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields =
+				orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				sb.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				sb.append(_ORDER_BY_ENTITY_ALIAS);
+				sb.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			sb.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				sb.append(_ORDER_BY_ENTITY_ALIAS);
+				sb.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						sb.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC);
+					}
+					else {
+						sb.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			sb.append(LibraryModelImpl.ORDER_BY_JPQL);
+		}
+
+		String sql = sb.toString();
+
+		Query query = session.createQuery(sql);
+
+		query.setFirstResult(0);
+		query.setMaxResults(2);
+
+		QueryPos queryPos = QueryPos.getInstance(query);
+
+		if (bindPublication) {
+			queryPos.add(new Timestamp(publication.getTime()));
+		}
+
+		if (orderByComparator != null) {
+			for (Object orderByConditionValue :
+					orderByComparator.getOrderByConditionValues(library)) {
+
+				queryPos.add(orderByConditionValue);
+			}
+		}
+
+		List<Library> list = query.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Removes all the libraries where publication = &#63; from the database.
+	 *
+	 * @param publication the publication
+	 */
+	@Override
+	public void removeByPublication(Date publication) {
+		for (Library library :
+				findByPublication(
+					publication, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null)) {
+
+			remove(library);
+		}
+	}
+
+	/**
+	 * Returns the number of libraries where publication = &#63;.
+	 *
+	 * @param publication the publication
+	 * @return the number of matching libraries
+	 */
+	@Override
+	public int countByPublication(Date publication) {
+		FinderPath finderPath = _finderPathCountByPublication;
+
+		Object[] finderArgs = new Object[] {_getTime(publication)};
+
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+
+		if (count == null) {
+			StringBundler sb = new StringBundler(2);
+
+			sb.append(_SQL_COUNT_LIBRARY_WHERE);
+
+			boolean bindPublication = false;
+
+			if (publication == null) {
+				sb.append(_FINDER_COLUMN_PUBLICATION_PUBLICATION_1);
+			}
+			else {
+				bindPublication = true;
+
+				sb.append(_FINDER_COLUMN_PUBLICATION_PUBLICATION_2);
+			}
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				if (bindPublication) {
+					queryPos.add(new Timestamp(publication.getTime()));
+				}
+
+				count = (Long)query.uniqueResult();
+
+				finderCache.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception exception) {
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	private static final String _FINDER_COLUMN_PUBLICATION_PUBLICATION_1 =
+		"library.publication IS NULL";
+
+	private static final String _FINDER_COLUMN_PUBLICATION_PUBLICATION_2 =
+		"library.publication = ?";
 
 	public LibraryPersistenceImpl() {
 		Map<String, String> dbColumnNames = new HashMap<String, String>();
@@ -1932,17 +2453,11 @@ public class LibraryPersistenceImpl
 			finderCache.removeResult(
 				_finderPathWithoutPaginationFindByUuid, args);
 
-			args = new Object[] {libraryModelImpl.getTitle()};
+			args = new Object[] {libraryModelImpl.getPublication()};
 
-			finderCache.removeResult(_finderPathCountByTitle, args);
+			finderCache.removeResult(_finderPathCountByPublication, args);
 			finderCache.removeResult(
-				_finderPathWithoutPaginationFindByTitle, args);
-
-			args = new Object[] {libraryModelImpl.getWriter()};
-
-			finderCache.removeResult(_finderPathCountByWriter, args);
-			finderCache.removeResult(
-				_finderPathWithoutPaginationFindByWriter, args);
+				_finderPathWithoutPaginationFindByPublication, args);
 
 			finderCache.removeResult(_finderPathCountAll, FINDER_ARGS_EMPTY);
 			finderCache.removeResult(
@@ -1969,41 +2484,22 @@ public class LibraryPersistenceImpl
 			}
 
 			if ((libraryModelImpl.getColumnBitmask() &
-				 _finderPathWithoutPaginationFindByTitle.getColumnBitmask()) !=
-					 0) {
+				 _finderPathWithoutPaginationFindByPublication.
+					 getColumnBitmask()) != 0) {
 
 				Object[] args = new Object[] {
-					libraryModelImpl.getOriginalTitle()
+					libraryModelImpl.getOriginalPublication()
 				};
 
-				finderCache.removeResult(_finderPathCountByTitle, args);
+				finderCache.removeResult(_finderPathCountByPublication, args);
 				finderCache.removeResult(
-					_finderPathWithoutPaginationFindByTitle, args);
+					_finderPathWithoutPaginationFindByPublication, args);
 
-				args = new Object[] {libraryModelImpl.getTitle()};
+				args = new Object[] {libraryModelImpl.getPublication()};
 
-				finderCache.removeResult(_finderPathCountByTitle, args);
+				finderCache.removeResult(_finderPathCountByPublication, args);
 				finderCache.removeResult(
-					_finderPathWithoutPaginationFindByTitle, args);
-			}
-
-			if ((libraryModelImpl.getColumnBitmask() &
-				 _finderPathWithoutPaginationFindByWriter.getColumnBitmask()) !=
-					 0) {
-
-				Object[] args = new Object[] {
-					libraryModelImpl.getOriginalWriter()
-				};
-
-				finderCache.removeResult(_finderPathCountByWriter, args);
-				finderCache.removeResult(
-					_finderPathWithoutPaginationFindByWriter, args);
-
-				args = new Object[] {libraryModelImpl.getWriter()};
-
-				finderCache.removeResult(_finderPathCountByWriter, args);
-				finderCache.removeResult(
-					_finderPathWithoutPaginationFindByWriter, args);
+					_finderPathWithoutPaginationFindByPublication, args);
 			}
 		}
 
@@ -2309,14 +2805,9 @@ public class LibraryPersistenceImpl
 				Integer.class.getName(), OrderByComparator.class.getName()
 			});
 
-		_finderPathWithoutPaginationFindByTitle = new FinderPath(
-			LibraryImpl.class, FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
-			"findByTitle", new String[] {String.class.getName()},
-			LibraryModelImpl.TITLE_COLUMN_BITMASK);
-
-		_finderPathCountByTitle = new FinderPath(
-			Long.class, FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
-			"countByTitle", new String[] {String.class.getName()});
+		_finderPathWithPaginationCountByTitle = new FinderPath(
+			Long.class, FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "countByTitle",
+			new String[] {String.class.getName()});
 
 		_finderPathWithPaginationFindByWriter = new FinderPath(
 			LibraryImpl.class, FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
@@ -2326,14 +2817,26 @@ public class LibraryPersistenceImpl
 				Integer.class.getName(), OrderByComparator.class.getName()
 			});
 
-		_finderPathWithoutPaginationFindByWriter = new FinderPath(
-			LibraryImpl.class, FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
-			"findByWriter", new String[] {String.class.getName()},
-			LibraryModelImpl.WRITER_COLUMN_BITMASK);
+		_finderPathWithPaginationCountByWriter = new FinderPath(
+			Long.class, FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "countByWriter",
+			new String[] {String.class.getName()});
 
-		_finderPathCountByWriter = new FinderPath(
+		_finderPathWithPaginationFindByPublication = new FinderPath(
+			LibraryImpl.class, FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
+			"findByPublication",
+			new String[] {
+				Date.class.getName(), Integer.class.getName(),
+				Integer.class.getName(), OrderByComparator.class.getName()
+			});
+
+		_finderPathWithoutPaginationFindByPublication = new FinderPath(
+			LibraryImpl.class, FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+			"findByPublication", new String[] {Date.class.getName()},
+			LibraryModelImpl.PUBLICATION_COLUMN_BITMASK);
+
+		_finderPathCountByPublication = new FinderPath(
 			Long.class, FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
-			"countByWriter", new String[] {String.class.getName()});
+			"countByPublication", new String[] {Date.class.getName()});
 	}
 
 	@Deactivate
@@ -2375,6 +2878,14 @@ public class LibraryPersistenceImpl
 
 	@Reference
 	protected FinderCache finderCache;
+
+	private Long _getTime(Date date) {
+		if (date == null) {
+			return null;
+		}
+
+		return date.getTime();
+	}
 
 	private static final String _SQL_SELECT_LIBRARY =
 		"SELECT library FROM Library library";

@@ -18,9 +18,11 @@ import com.jsanz.library.model.Library;
 import com.jsanz.library.service.LibraryLocalService;
 import com.jsanz.library.service.LibraryLocalServiceUtil;
 import com.jsanz.library.service.base.LibraryLocalServiceBaseImpl;
-
+import com.jsanz.library.service.persistence.LibraryFinder;
 import com.jsanz.library.service.persistence.LibraryUtil;
+import com.jsanz.library.service.persistence.impl.LibraryFinderImpl;
 import com.liferay.portal.aop.AopService;
+import com.liferay.portal.kernel.exception.SystemException;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -61,6 +63,14 @@ public class LibraryLocalServiceImpl extends LibraryLocalServiceBaseImpl {
 		//result.addAll(LibraryUtil.findByPublication(publication));
 		result = result.stream().distinct().collect(Collectors.toList());
 		return result;
+	}
+
+	public List<Library> findByAll2(String search) throws SystemException {
+		search = "%" + search + "%";
+		System.out.println("searching...");
+		List<Library> libraries = libraryFinder.findByAll(search);
+		if (libraries == null) libraries = new ArrayList<>();
+		return libraries;
 	}
 
 	public List<Library> findByTitle(String title) {

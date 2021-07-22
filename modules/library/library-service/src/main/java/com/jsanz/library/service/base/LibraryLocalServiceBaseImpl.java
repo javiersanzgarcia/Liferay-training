@@ -16,6 +16,7 @@ package com.jsanz.library.service.base;
 
 import com.jsanz.library.model.Library;
 import com.jsanz.library.service.LibraryLocalService;
+import com.jsanz.library.service.persistence.LibraryFinder;
 import com.jsanz.library.service.persistence.LibraryPersistence;
 
 import com.liferay.portal.aop.AopService;
@@ -413,6 +414,9 @@ public abstract class LibraryLocalServiceBaseImpl
 
 	@Reference
 	protected LibraryPersistence libraryPersistence;
+
+	@Reference
+	protected LibraryFinder libraryFinder;
 
 	@Reference
 	protected com.liferay.counter.kernel.service.CounterLocalService

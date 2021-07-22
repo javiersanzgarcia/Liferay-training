@@ -37,6 +37,11 @@ public class LibraryServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.jsanz.library.service.impl.LibraryServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
+	public static com.jsanz.library.model.Library delete(
+		com.jsanz.library.model.Library library) {
+
+		return getService().delete(library);
+	}
 
 	/**
 	 * Returns the OSGi service identifier.
@@ -51,6 +56,12 @@ public class LibraryServiceUtil {
 		com.jsanz.library.model.Library library) {
 
 		return getService().save(library);
+	}
+
+	public static com.jsanz.library.model.Library update(
+		com.jsanz.library.model.Library library) {
+
+		return getService().update(library);
 	}
 
 	public static LibraryService getService() {
